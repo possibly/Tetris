@@ -1,3 +1,4 @@
+package pkg;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -15,7 +16,7 @@ import javax.swing.Timer;
 
 public class Runner {
 	final static Logic brain = new Logic();
-	static JFrame frameTetris;
+	//static JFrame frameTetris;
 	static JFrame startFrame;
 	static JPanel startPanel;
 	static Timer t;
@@ -25,35 +26,30 @@ public class Runner {
 		
 		init();
 
-		frameTetris.add(brain.getPanel(), BorderLayout.CENTER);
-		
 		startFrame.add(startPanel);
 		
+		startFrame.pack();
 		startFrame.setVisible(true);
 	}
-	public static void init(){
-		frameTetris = new JFrame("Tyler's Tetris");
-		frameTetris.setDefaultCloseOperation(frameTetris.EXIT_ON_CLOSE);
-		frameTetris.setSize(brain.getPanelSize().width+24,brain.getPanelSize().height+47);
-		
+	public static void init(){	
 		startFrame = new JFrame("Welcome to Tyler's Tetris");
-		startFrame.setDefaultCloseOperation(frameTetris.EXIT_ON_CLOSE);
-		startFrame.setSize(brain.STARTPANEL_SIZE);
+		startFrame.setDefaultCloseOperation(startFrame.EXIT_ON_CLOSE);
+		startFrame.setMinimumSize(brain.STARTPANEL_SIZE);
 		startFrame.setLayout(new BorderLayout());
 		
 		startPanel = new startPanel(brain.STARTPANEL_SIZE);
 	}
 	
 	public static void startGame(){
-		frameTetris.setVisible(true);
-		
+		brain.setTetrisFrameVisible();
 		t = new Timer(brain.SPEED_MS, new ActionListener(){
-			@Override
-            public void actionPerformed(ActionEvent e) {
+		@Override
+			public void actionPerformed(ActionEvent e) {
 				brain.play();
-            }
+		 	}
 		});
 		t.start();
+
 	}
 
 }

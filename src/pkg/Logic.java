@@ -1,36 +1,52 @@
+package pkg;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+
 import java.awt.BorderLayout;
 
 public class Logic {
 	//NOTE: I believe blocks may fall through each other sometimes because the panel class executes
 	//its own move() while play() executes its own move(). Hard to reproduce.
-	final Dimension CELL_SIZE = new Dimension(20,20);
-	final Dimension PANEL_SIZE = new Dimension(400,600);
-	final Dimension GRID_SIZE = new Dimension(401,601);
+	final Dimension CELL_SIZE = new Dimension(30,30);
+	final Dimension PANEL_SIZE = new Dimension(300,600);
+	final Dimension GRID_SIZE = new Dimension((int)PANEL_SIZE.getWidth()+1,(int)PANEL_SIZE.getHeight()+1);
 	final Dimension STARTPANEL_SIZE = new Dimension(400,600);
 	final Dimension SETUPPANEL_SIZE = new Dimension (400,600);
 	final Point START_POSITION_OF_FIGURES = new Point(PANEL_SIZE.width/2,PANEL_SIZE.height-PANEL_SIZE.height);
-	final int SPEED_MS = 100; //how often play() is called, ins miliseconds
-	final int MOVE_TICK = 20; //how far to move, in pixels
+	final int SPEED_MS = 200; //how often play() is called, ins miliseconds
+	final int MOVE_TICK = CELL_SIZE.height; //how far to move, in pixels
 	Grid g;
 	tetrisPanel panel;
+	JFrame frameTetris;
 	boolean youLose = false;
 	
 	
 	public void create(){ //this is necessary so I can have access to the variables without re-creating grid or panel
 		g = new Grid();
-		panel = new tetrisPanel();
-		panel.setBrain(this);
-	}
-	public tetrisPanel getPanel(){
-		return panel;
 	}
 	
+	public void setTetrisFrameVisible(){
+		panel = new tetrisPanel();
+		panel.setBrain(this); //needed because of shitty keylistener
+		panel.setPreferredSize(PANEL_SIZE);
+		panel.setMinimumSize(PANEL_SIZE); 
+        panel.setMaximumSize(PANEL_SIZE); 
+		
+		frameTetris = new JFrame("Tyler's Tetris");
+		frameTetris.setDefaultCloseOperation(frameTetris.EXIT_ON_CLOSE);
+		
+		frameTetris.add(panel);
+	
+		frameTetris.pack();
+		frameTetris.setVisible(true);
+	}
 	public Dimension getPanelSize(){
 		return PANEL_SIZE;
 	}
@@ -71,7 +87,6 @@ public class Logic {
 						move(f,"down");
 					}
 				}
-				displayFigures();
 			}			
 		}
 	}
@@ -137,7 +152,7 @@ public class Logic {
 					return false;
 				}
 			}
-			else if((int)c.getX() > PANEL_SIZE.getWidth()){ //xright of the panel
+			else if((int)c.getX() > PANEL_SIZE.getWidth()-30){ //xright of the panel
 				if(direction == "right"){
 					unmove(figureToCheck,direction);
 					return false;
@@ -162,7 +177,7 @@ public class Logic {
 				}
 			}
 			
-			if((int)c.getY() > PANEL_SIZE.getHeight()){ //ybottom of the panel
+			if((int)c.getY() > PANEL_SIZE.getHeight()-30){ //ybottom of the panel
 				unmove(figureToCheck,direction);
 				return false;
 			}
@@ -191,6 +206,7 @@ public class Logic {
 				c.setBounds((int)c.getX()+MOVE_TICK,(int)c.getY(),(int)c.getWidth(),(int)c.getHeight());
 			}
 		}
+		displayFigures();
 	}
 	
 	public void unmove(Figure figureToMove, String direction){
@@ -219,8 +235,8 @@ public class Logic {
 		g.turnGrey();
 		panel.setLabelToDraw("You Lose.");
 		displayFigures();
-		
 	}
+	
 	//methods for panels
 	public void displayFigures(){
 		ArrayList<Figure> figuresToDraw = new ArrayList<Figure>();

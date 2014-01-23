@@ -1,3 +1,4 @@
+package pkg;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+
 public class tetrisPanel extends JPanel implements KeyListener{
 	ArrayList<Figure> figuresToDraw = new ArrayList<Figure>();
 	String labelToDraw;
@@ -20,6 +22,13 @@ public class tetrisPanel extends JPanel implements KeyListener{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		g.setColor(Color.black);
+		for(int i = 0; i <= mybrain.PANEL_SIZE.width; i+=30){
+			g.drawLine(i, 0, i, mybrain.PANEL_SIZE.height);
+		}
+		for(int i = 0; i <= mybrain.PANEL_SIZE.height; i+=30){
+			g.drawLine(0, i, mybrain.PANEL_SIZE.width, i);
+		}
 		for(Figure f:figuresToDraw){
 			for(Cell c:f.getCells()){
 				g.setColor(f.getColor());
@@ -49,6 +58,9 @@ public class tetrisPanel extends JPanel implements KeyListener{
 	@Override
 	//Does keyListener need to be on panel because I want it in logic :(
 	public void keyPressed(KeyEvent arg0) {
+		if(mybrain.g.getActiveFigure() == null){
+			return;
+		}
 		if(arg0.getKeyCode() == 37){ //left arrow
 			if(mybrain.canMove(mybrain.g.getActiveFigure(), "left")){
 				mybrain.move(mybrain.g.getActiveFigure(), "left");

@@ -1,6 +1,8 @@
+package pkg;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+
 
 
 public class Grid {
@@ -58,7 +60,7 @@ public class Grid {
 	
 	public ArrayList<Integer> getFullRows(){
 		//NOTE: Cells are added in increments of CELL_SIZE to theGrid!
-		int widthOfGrid = (int)mybrain.PANEL_SIZE.getWidth();
+		int widthOfGrid = (int)mybrain.PANEL_SIZE.getWidth()-30;
 		int widthOfCell = (int)mybrain.CELL_SIZE.getWidth();
 		int numCellsInRow = 0;
 		ArrayList<Integer> fullRows = new ArrayList<Integer>();
@@ -83,6 +85,9 @@ public class Grid {
 					if((int)c.getY() == (int)i){
 						c.setBounds(-100,-100,0,0);
 						c.setState("dead");
+						for(Cell d:f.getCells()){
+							c.setState("dead");
+						}
 					}
 				}
 			}
